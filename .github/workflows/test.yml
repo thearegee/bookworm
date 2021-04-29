@@ -18,14 +18,7 @@ jobs:
   updating:
     runs-on: ubuntu-latest
     steps:
-    - name: Create pull request
-      uses: peter-evans/create-pull-request@v3
+    - uses: actions/checkout@v2
+      name: Creating bookmarks
       with:
-        commit-message: Updating bookmarks
-        committer: GitHub <noreply@github.com>
-        title: 'Updating bookmarks'
-        labels: automated pr
-    - name: Check outputs
-      run: |
-        echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+        config: https://raw.githubusercontent.com/thearegee/bookworm/main/demo/config/bookmarks.yaml
