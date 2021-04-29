@@ -26,6 +26,7 @@
   "homepage": "https://github.com/thearegee/bookworm#readme",
   "dependencies": {
     "@actions/core": "^1.2.5",
+    "got": "^11.8.2",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {

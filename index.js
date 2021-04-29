@@ -6,8 +6,7 @@ const generateBookmarks = require('./src/generate-bookmarks')
 async function run() {
     try {
         const config = core.getInput('config');
-        console.log(`Hello`);
-        console.log(generateBookmarks(config))
+        generateBookmarks(config)
     } catch (error) {
         core.setFailed(error.message);
     }

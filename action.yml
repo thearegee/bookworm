@@ -4,7 +4,7 @@ inputs:
   config: 
     description: 'The config YAML you want to use to generate bookmarks'
     required: true
-    default: './demo/config'
+    default: 'https://raw.githubusercontent.com/thearegee/bookworm/main/demo/config/bookmarks.yaml'
 outputs:
   time: # output will be available to future steps
     description: 'The message to output'
