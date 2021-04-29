@@ -15,11 +15,22 @@ jobs:
     - run: npm ci
     - run: npm test
 
-  # test action works running from the graph
-  test:
+  updating:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ./
+      name: Creating bookmarks
       with:
         config: https://raw.githubusercontent.com/thearegee/bookworm/main/demo/config/bookmarks.yaml
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        commit-message: Updating bookmarks
+        committer: GitHub <noreply@github.com>
+        title: 'Updating bookmarks'
+        labels: automated pr
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
