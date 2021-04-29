@@ -1,10 +1,10 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Nookworm'
+description: 'Bookmark generator'
 inputs:
-  test:  # id of input
-    description: 'test'
+  config: 
+    description: 'The config YAML you want to use to generate bookmarks'
     required: true
-    default: 'robin'
+    default: './demo/config'
 outputs:
   time: # output will be available to future steps
     description: 'The message to output'

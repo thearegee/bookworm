@@ -1,116 +1,85 @@
-# Create a JavaScript Action
+# Bookworm
 
-<p align="center">
-  <a href="https://github.com/actions/javascript-action/actions"><img alt="javscript-action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
-</p>
+Thi project is currently a POC and comes from my time over the last year in SRE and infrastructure where we store everything as code. Working in a large company from tools, development environments and HR systems there are literally thousands of URLs to remember.
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+At the moment if you don't know a URL you have to ask in Slack. I wanted a way everyone in the company could contribute, share and centralize all these URLs, having a consistent experience and taxonomy.
 
-This template includes tests, linting, a validation workflow, publishing, and versioning guidance.
+I miss [del.icio.us](https://en.wikipedia.org/wiki/Delicious_(website)) and I've not found anything I like to replace it, everything also needs an account but your bookmarks in Chrome can already be sync to your account. So my thought was what about using Git as the repository for shared bookmarks.
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+This Repo is to centralize and share Chrome bookmarks and generate `HTML` you can import into Chrome.
 
-## Create an action from this template
+### Future
 
-Click the `Use this Template` and provide the new repo details for your action
+This is currently just a POC, the next step is to turn it into either a web service or a `npx` where you can point to different peoples `YAML` bookmarks and load them into Bookworm spitting out a HTML file you can use.
 
-## Code in Main
+People would check in their YAML files into their own git repos, then using the RAW view Bookworm can process them. You could string multiple together and collect metrics about popular config (if there is a web service).
 
-Install the dependencies
 
-```bash
-npm install
+## Updating bookmarks
+
+All bookmarks are stored withing `./src/config/bookmarks.yaml`, you can add folders or URLs as you please following this schema.
+
+```YAML
+folders:
+  - label: folder 1
+    folders:
+      - label: sub folder 1
+        bookmarks:
+          - label: sample url 1
+            href: https://www.mywebsite.com
+  - label: folder 2
+    folders:
+      - label: sub folder 2
+        bookmarks:
+          - label: sample url 2
+            href: https://www.mysecondwebsite.com
+          - label: sample url 3
+            href: https://www.mythirdwebsite.com
 ```
 
-Run the tests :heavy_check_mark:
+## Generating bookmarks HTML
 
-```bash
-$ npm test
+There is a simple node script that will turn this `YAML` into a `HTML` file you can import into chrome. To generate the file you need [Node](https://nodejs.org/en/) to run the script, then you can run the following:
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-...
+```Bash
+$ nvm use
+$ yarn
+$ yarn start
 ```
 
-## Change action.yml
+This will then produce `bookmarks.html`.
 
-The action.yml defines the inputs and output for your action.
+## Importing bookmarks
 
-Update the action.yml with your name, description, inputs and outputs for your action.
+You can import Bookworm into Chrome following the standard action: [https://support.google.com/chrome/answer/96816?hl=en-GB](https://support.google.com/chrome/answer/96816?hl=en-GB). You want to import the file in this repo `bookmarks.html`.
 
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
 
-## Change the Code
+You will then find your bookmarks under:
 
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-const core = require('@actions/core');
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
 ```
 
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Package for distribution
-
-GitHub Actions will run the entry point from the action.yml. Packaging assembles the code into one file that can be checked in to Git, enabling fast and reliable execution and preventing the need to check in node_modules.
-
-Actions are run from GitHub repos.  Packaging the action will create a packaged action in the dist folder.
-
-Run prepare
-
-```bash
-npm run prepare
+Bookmarks Bar/
+├── Bookworm/
+│   ├── folder 1/
+│       ├──...
+│   ├── .../
+├──...
 ```
 
-Since the packaged index.js is run from the dist folder.
+`Bookworm` will contain all the shared bookmarks, if you want to change the folder name you can do so in `YMAL`:
 
-```bash
-git add dist
+```YAML
+label: Bookworm
 ```
 
-## Create a release branch
 
-Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
+This is a shared repo you might want to regularly delete the `Bookworm` folder and update it. You can do this, then `git pull` this repo, rerun the generator and import the bookmarks again.
 
-Checkin to the v1 release branch
+## Exporting bookmarks
 
-```bash
-git checkout -b v1
-git commit -a -m "v1 release"
-```
+TODO - a way to convert exported bookmarks into YAML.
 
-```bash
-git push origin v1
-```
+## Testing
 
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Usage
-
-You can now consume the action by referencing the v1 branch
-
-```yaml
-uses: actions/javascript-action@v1
-with:
-  milliseconds: 1000
-```
-
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+TODO
+Fix markup folder header depth
