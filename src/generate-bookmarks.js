@@ -11,8 +11,8 @@ const writeMarkupFiles = async (config) => {
     console.log(bookmarks)
 
     console.log('Writing files')
-    writeFileSync('./chrome.html', chrome)
-    writeFileSync('./README.md', readme)
+    writeFileSync('./chrome.html', bookmarks.chrome)
+    writeFileSync('./README.md', bookmarks.readme)
 }
 
 module.exports = writeMarkupFiles;
