@@ -12248,13 +12248,15 @@ function wrappy (fn, cb) {
 
 const got = __nccwpck_require__(3061)
 const yaml = __nccwpck_require__(1917);
-const { readFileSync, writeFileSync } = __nccwpck_require__(5747);
+const { writeFileSync } = __nccwpck_require__(5747);
 const generateImportBookmarkMarkup = __nccwpck_require__(4351);
 
 
 const writeMarkupFiles = async (config) => {
     const { body } = await got(config);
-    const { chrome, readme } = generateImportBookmarkMarkup(yaml.load(body))
+    const bookmarks = generateImportBookmarkMarkup(yaml.load(body))
+
+    console.log(bookmarks)
 
     console.log('Writing files')
     writeFileSync('./chrome.html', chrome)

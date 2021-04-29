@@ -18,10 +18,6 @@ jobs:
   updating:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      name: Creating bookmarks
-      with:
-        config: https://raw.githubusercontent.com/thearegee/bookworm/main/demo/config/bookmarks.yaml
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3
       with:
