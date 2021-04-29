@@ -1,7 +1,6 @@
 
-import * as chrome from './templates/chrome.js'
-import * as readme from './templates/readme.js'
-
+const chrome = require('./templates/chrome.js')
+const readme = require('./templates/readme.js')
 
 const generateImportBookmarkMarkup = (config) => {
     return {
