@@ -48,4 +48,5 @@ const addBookwormDescription = (date) => {
     return `<!-- These bookmarks were last updated ${date} using Bookworm (https://github.com/thearegee/bookworm) -->`
 }
 
-export { bookmark, bookmarkFolder, bookmarkLink }
+
+module.exports = { bookmark, bookmarkFolder, bookmarkLink };

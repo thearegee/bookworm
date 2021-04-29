@@ -1,6 +1,6 @@
 const yaml = require('js-yaml');
 const { readFileSync } = require('fs');
-const generateImportBookmarkMarkup = require('./index.mjs');
+const generateImportBookmarkMarkup = require('./index.js');
 
 const loadConfigAsJson = () => {
     try {

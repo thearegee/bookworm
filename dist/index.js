@@ -4531,7 +4531,7 @@ module.exports = new Type('tag:yaml.org,2002:timestamp', {
 
 const yaml = __nccwpck_require__(917);
 const { readFileSync } = __nccwpck_require__(747);
-const generateImportBookmarkMarkup = __nccwpck_require__(55);
+const generateImportBookmarkMarkup = __nccwpck_require__(923);
 
 const loadConfigAsJson = () => {
     try {
@@ -4554,11 +4554,191 @@ module.exports = writeMarkupFiles;
 
 /***/ }),
 
-/***/ 55:
+/***/ 923:
+/***/ ((module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony import */ var _templates_chrome_js__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(946);
+/* harmony import */ var _templates_chrome_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_templates_chrome_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _templates_readme_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(153);
+/* harmony import */ var _templates_readme_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_templates_readme_js__WEBPACK_IMPORTED_MODULE_1__);
+/* module decorator */ module = __nccwpck_require__.hmd(module);
+
+
+
+
+
+const generateImportBookmarkMarkup = (config) => {
+    return {
+        chrome: _templates_chrome_js__WEBPACK_IMPORTED_MODULE_0__.bookmark(generateTimeStamp(), config.label, config.description, traverseStructure(config, 'chrome')),
+        readme: _templates_readme_js__WEBPACK_IMPORTED_MODULE_1__.bookmark(generateTimeStamp(), config.label, config.description, traverseStructure(config, 'readme'))
+    }
+}
+
+const traverseStructure = ({ bookmarks, folders }, type) => {
+    const arr = [];
+    if (bookmarks) {
+        arr.push(traverseBookmarks(bookmarks, type))
+    }
+    if (folders) {
+        arr.push(traverseFolders(folders, type))
+    }
+    return arr.join('')
+}
+
+const traverseFolders = (folders, type) => {
+    const arr = [];
+    folders.forEach((folder) => {
+        const children = traverseStructure(folder, type);
+        // need fix the depth of folder headings
+        arr.push(generateBookmarkFolderMarkup(1, folder.label, folder.description, children, type))
+    })
+    return arr.join('');
+}
+
+const traverseBookmarks = (bookmarks, type) => {
+    const arr = [];
+    bookmarks.forEach((bookmark) => {
+        arr.push(generateBookmarkLinkMarkup(bookmark, type))
+    })
+    return arr.join('');
+}
+
+const generateBookmarkFolderMarkup = (index, label, description, children, type) => {
+    switch (type) {
+        case 'chrome':
+            return _templates_chrome_js__WEBPACK_IMPORTED_MODULE_0__.bookmarkFolder(generateTimeStamp(), label, description, children)
+        case 'readme':
+            return _templates_readme_js__WEBPACK_IMPORTED_MODULE_1__.bookmarkFolder(index, label, description, children)
+    }
+}
+
+const generateBookmarkLinkMarkup = (bookmark, type) => {
+    switch (type) {
+        case 'chrome':
+            return _templates_chrome_js__WEBPACK_IMPORTED_MODULE_0__.bookmarkLink(generateTimeStamp(), bookmark.label, bookmark.description, bookmark.href)
+        case 'readme':
+            return _templates_readme_js__WEBPACK_IMPORTED_MODULE_1__.bookmarkLink(bookmark.label, bookmark.description, bookmark.href)
+    }
+}
+
+
+const generateTimeStamp = () => {
+    return Math.round(Date.now() / 1000)
+}
+
+module.exports = generateImportBookmarkMarkup;
+
+/***/ }),
+
+/***/ 946:
 /***/ ((module) => {
 
-module.exports = eval("require")("./index.mjs");
+const bookmark = (time, label, description, children) => {
+    return `
+    ${addBookwormDescription()}
+    <!DOCTYPE NETSCAPE-Bookmark-file-1>
+<!-- This is an automatically generated file.
+        It will be read and overwritten.
+        DO NOT EDIT! -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Bookmarks</TITLE>
+<H1>Bookmarks</H1>
+${addDescription(description)}
+<DL><p>
+<DT><H3 ADD_DATE="${time}" LAST_MODIFIED="${time}">${label}</H3>
+<DL><p>
+    ${children}
+</DL><p>
+</DL><p>
+    `
+}
 
+const bookmarkFolder = (time, label, description, children) => {
+    return `
+            ${addDescription(description)}
+            <DT><H3 ADD_DATE="${time}" LAST_MODIFIED="${time}">${label}</H3>
+<DL><p>
+${children}
+</DL><p>
+    `
+}
+
+
+const bookmarkLink = (time, label, description, href) => {
+    return `
+    ${addDescription(description)}
+    <DT><A HREF="${href}" ADD_DATE="${time}">${label}</A>
+    `
+}
+
+const addDescription = (description) => {
+    if (description) {
+        return `<!-- ${description} -->`
+    } else {
+        return ``
+    }
+}
+
+const addBookwormDescription = (date) => {
+    return `<!-- These bookmarks were last updated ${date} using Bookworm (https://github.com/thearegee/bookworm) -->`
+}
+
+
+module.exports = { bookmark, bookmarkFolder, bookmarkLink };
+
+/***/ }),
+
+/***/ 153:
+/***/ ((module) => {
+
+const bookmark = (date, label, description, children) => {
+    return `
+# ${label}
+${addDescription(description)}
+${children}
+${addBookwormDescription(date)}
+`
+}
+
+const bookmarkFolder = (index, label, description, children) => {
+    return `
+${convertNumberIntoHeader(index, label)}
+${addDescription(description)}
+${children}
+    `
+}
+
+
+const convertNumberIntoHeader = (index, label) => {
+    const arr = ['']
+    for (let i = 0; i <= index; i++) {
+        arr.push('#')
+    }
+    return `${arr.join('')} ${label}`
+}
+
+
+const bookmarkLink = (label, description, href) => {
+    return `
+* (${label})[${href}] - ${addDescription(description)}
+`
+}
+
+const addDescription = (description) => {
+    if (description) {
+        return `${description}`
+    } else {
+        return ``
+    }
+}
+
+const addBookwormDescription = (date) => {
+    return `_These bookmarks were last updated on ${date} using [Bookworm](https://github.com/thearegee/bookworm)_`
+}
+
+module.exports = { bookmark, bookmarkFolder, bookmarkLink };
 
 /***/ }),
 
@@ -4599,8 +4779,8 @@ module.exports = require("path");;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
+/******/ 			id: moduleId,
+/******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
@@ -4613,11 +4793,69 @@ module.exports = require("path");;
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
 /******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => module['default'] :
+/******/ 				() => module;
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/harmony module decorator */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.hmd = (module) => {
+/******/ 			module = Object.create(module);
+/******/ 			if (!module.children) module.children = [];
+/******/ 			Object.defineProperty(module, 'exports', {
+/******/ 				enumerable: true,
+/******/ 				set: () => {
+/******/ 					throw new Error('ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: ' + module.id);
+/******/ 				}
+/******/ 			});
+/******/ 			return module;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
